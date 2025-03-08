@@ -1,0 +1,10 @@
+BasedOnStyle: Google
+AccessModifierOffset: -2
+AlignAfterOpenBracket: AlwaysBreak
+ColumnLimit: 100
+DerivePointerAlignment: false
+IndentWidth: 4
+InsertNewlineAtEOF: true
+NamespaceIndentation: All
+PointerAlignment: Right
+SpaceBeforeCpp11BracedList: true

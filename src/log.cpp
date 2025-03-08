@@ -15,20 +15,32 @@ std::string LogLevelName(LogLevel level) {
         case LogLevel::Info:
             return "Info";
         case LogLevel::Warning:
-            return COLOR_YELLOW "Warning";
+            return "Warning";
         case LogLevel::Error:
-            return COLOR_RED "Error";
+            return "Error";
         case LogLevel::Off:
             return "?";
     }
 }
 
+std::string LogLevelColor(LogLevel level) {
+    switch (level) {
+        case LogLevel::Error:
+            return COLOR_RED;
+        case LogLevel::Warning:
+            return COLOR_YELLOW;
+        default:
+            return COLOR_RESET;
+    }
+}
+
 void log::Log(LogLevel level, const std::string &message) {
-    if (level > log_level) {
+    if (level < log_level) {
         return;
     }
 
-    const std::string out = "[" + LogLevelName(level) + "] " + message + "\n";
+    const std::string out =
+        LogLevelColor(level) + "[" + LogLevelName(level) + "] " + message + "\n" COLOR_RESET;
     std::cout << out;
 }
 

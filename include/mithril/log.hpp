@@ -14,5 +14,5 @@ namespace log {
     void Log(LogLevel level, const std::string &message);
 
     void SetLevel(LogLevel level);
-    LogLevel GetLevel(void);
+    LogLevel GetLevel();
 }  // namespace log

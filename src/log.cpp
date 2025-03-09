@@ -6,9 +6,9 @@
 #define COLOR_YELLOW "\033[33m"
 #define COLOR_RED "\033[31m"
 
-LogLevel log_level = LogLevel::Info;
+auto log_level = LogLevel::Info;
 
-std::string LogLevelName(LogLevel level) {
+std::string LogLevelName(const LogLevel level) {
     switch (level) {
         case LogLevel::Debug:
             return "Debug";
@@ -21,9 +21,10 @@ std::string LogLevelName(LogLevel level) {
         case LogLevel::Off:
             return "?";
     }
+    return "?";
 }
 
-std::string LogLevelColor(LogLevel level) {
+std::string LogLevelColor(const LogLevel level) {
     switch (level) {
         case LogLevel::Error:
             return COLOR_RED;
@@ -34,7 +35,7 @@ std::string LogLevelColor(LogLevel level) {
     }
 }
 
-void log::Log(LogLevel level, const std::string &message) {
+void log::Log(const LogLevel level, const std::string &message) {
     if (level < log_level) {
         return;
     }
@@ -46,4 +47,4 @@ void log::Log(LogLevel level, const std::string &message) {
 
 void log::SetLevel(const LogLevel level) { log_level = level; }
 
-LogLevel log::GetLevel(void) { return log_level; }
+LogLevel log::GetLevel() { return log_level; }

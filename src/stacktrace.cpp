@@ -15,7 +15,6 @@
 #include <iostream>
 
 #include "mithril/log.hpp"
-#include "mithril/profile.hpp"
 
 i32 skipped_frames = 0;
 
@@ -25,9 +24,9 @@ struct StackFrame {
     std::string filename;
 };
 
-void stacktrace::SkipFrames(i32 frames) { skipped_frames = frames; }
+void stacktrace::SkipFrames(const i32 frames) { skipped_frames = frames; }
 
-std::string SignalName(i32 signal) {
+std::string SignalName(const i32 signal) {
     switch (signal) {
         case SIGILL:
             return "illegal instruction";
@@ -42,7 +41,7 @@ std::string SignalName(i32 signal) {
     }
 }
 
-void stacktrace::SignalHandler(i32 signal) {
+void stacktrace::SignalHandler(const i32 signal) {
     log::Log(LogLevel::Info, "received signal: " + SignalName(signal));
     const std::vector<std::string> frames = stacktrace::Stacktrace();
     log::Log(LogLevel::Info, "found " + std::to_string(frames.size()) + " stack frames");
@@ -54,7 +53,7 @@ void stacktrace::SignalHandler(i32 signal) {
 
 std::vector<std::string> stacktrace::Stacktrace() {
     std::vector<void *> addresses(64 + skipped_frames);
-    i32 num_frames = backtrace(addresses.data(), 64 + skipped_frames);
+    const i32 num_frames = backtrace(addresses.data(), 64 + skipped_frames);
     addresses.resize(num_frames);
 
     if (skipped_frames >= num_frames) {
@@ -83,7 +82,7 @@ std::vector<std::string> stacktrace::Stacktrace() {
             }
             frames.push_back(frame);
         } else {
-            frames.push_back("???");
+            frames.emplace_back("???");
         }
 
         pclose(process);

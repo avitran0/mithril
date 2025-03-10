@@ -10,7 +10,7 @@ enum class LogLevel {
     Off,
 };
 
-namespace log {
+namespace logging {
     void Log(LogLevel level, const std::string &message);
 
     void SetLevel(LogLevel level);

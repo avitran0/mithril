@@ -1,4 +1,4 @@
-#include "mithril/log.hpp"
+#include "mithril/logging.hpp"
 
 #include <iostream>
 
@@ -8,7 +8,7 @@
 
 auto log_level = LogLevel::Info;
 
-std::string log::LevelName(const LogLevel level) {
+std::string logging::LevelName(const LogLevel level) {
     switch (level) {
         case LogLevel::Debug:
             return "Debug";
@@ -35,7 +35,7 @@ std::string LogLevelColor(const LogLevel level) {
     }
 }
 
-void log::Log(const LogLevel level, const std::string &message) {
+void logging::Log(const LogLevel level, const std::string &message) {
     if (level < log_level) {
         return;
     }
@@ -45,6 +45,6 @@ void log::Log(const LogLevel level, const std::string &message) {
     std::cout << out;
 }
 
-void log::SetLevel(const LogLevel level) { log_level = level; }
+void logging::SetLevel(const LogLevel level) { log_level = level; }
 
-LogLevel log::GetLevel() { return log_level; }
+LogLevel logging::GetLevel() { return log_level; }

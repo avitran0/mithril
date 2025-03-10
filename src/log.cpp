@@ -8,7 +8,7 @@
 
 auto log_level = LogLevel::Info;
 
-std::string LogLevelName(const LogLevel level) {
+std::string log::LevelName(const LogLevel level) {
     switch (level) {
         case LogLevel::Debug:
             return "Debug";
@@ -41,7 +41,7 @@ void log::Log(const LogLevel level, const std::string &message) {
     }
 
     const std::string out =
-        LogLevelColor(level) + "[" + LogLevelName(level) + "] " + message + "\n" COLOR_RESET;
+        LogLevelColor(level) + "[" + LevelName(level) + "] " + message + "\n" COLOR_RESET;
     std::cout << out;
 }
 

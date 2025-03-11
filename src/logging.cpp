@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-auto log_level = logging::Level::Info;
+logging::Level log_level = logging::Level::Info;
 std::ofstream log_file {};
 
 std::string logging::LevelName(const Level level) {

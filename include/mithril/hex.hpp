@@ -1,7 +1,10 @@
 #pragma once
 
+#include <ios>
+#include <mithril/types.hpp>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace hex {
     template <typename T>
@@ -11,4 +14,6 @@ namespace hex {
         ss << std::hex << "0x" << value;
         return ss.str();
     }
+
+    std::string HexStringVector(std::vector<u8> vec);
 }  // namespace hex

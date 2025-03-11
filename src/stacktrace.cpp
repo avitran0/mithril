@@ -42,9 +42,9 @@ std::string SignalName(const i32 signal) {
 }
 
 void stacktrace::SignalHandler(const i32 signal) {
-    logging::Log(LogLevel::Info, "received signal: " + SignalName(signal));
+    logging::Info("received signal: " + SignalName(signal));
     const std::vector<std::string> frames = stacktrace::Stacktrace();
-    logging::Log(LogLevel::Info, "found " + std::to_string(frames.size()) + " stack frames");
+    logging::Info("found " + std::to_string(frames.size()) + " stack frames");
     for (const std::string &frame : frames) {
         std::cout << frame + "\n";
     }
@@ -70,7 +70,7 @@ std::vector<std::string> stacktrace::Stacktrace() {
                 << reinterpret_cast<uintptr_t>(address) - 1;
         FILE *process = popen(command.str().c_str(), "r");
         if (!process) {
-            logging::Log(LogLevel::Error, "could not invoke addr2line");
+            logging::Error("could not invoke addr2line");
         }
 
         char buffer[256];

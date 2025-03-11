@@ -1,61 +1,48 @@
 #include "mithril/logging.hpp"
 
 #include <fstream>
-#include <iostream>
 
-#define COLOR_RESET "\033[0m"
-#define COLOR_YELLOW "\033[33m"
-#define COLOR_RED "\033[31m"
-
-auto log_level = LogLevel::Info;
+auto log_level = logging::Level::Info;
 std::ofstream log_file {};
 
-std::string logging::LevelName(const LogLevel level) {
+std::string logging::LevelName(const Level level) {
     switch (level) {
-        case LogLevel::Debug:
+        case Level::Debug:
             return "Debug";
-        case LogLevel::Info:
+        case Level::Info:
             return "Info";
-        case LogLevel::Warning:
+        case Level::Warning:
             return "Warning";
-        case LogLevel::Error:
+        case Level::Error:
             return "Error";
-        case LogLevel::Off:
+        case Level::Off:
             return "?";
     }
     return "?";
 }
 
-std::string LogLevelColor(const LogLevel level) {
-    switch (level) {
-        case LogLevel::Error:
-            return COLOR_RED;
-        case LogLevel::Warning:
-            return COLOR_YELLOW;
-        default:
-            return COLOR_RESET;
-    }
-}
-
-void logging::Log(const LogLevel level, const std::string &message) {
-    if (level < log_level) {
-        return;
-    }
-
-    const std::string out = "[" + LevelName(level) + "] " + message + "\n";
-    std::cout << LogLevelColor(level) << out << COLOR_RESET;
-    if (log_file.good()) {
-        log_file << out;
-    }
-}
-
 void logging::SetLogFile(const std::string &file_name) {
     log_file = std::ofstream {file_name};
     if (!log_file.good()) {
-        Log(LogLevel::Error, "could not open log file");
+        Error("could not open log file");
     }
 }
 
-void logging::SetLevel(const LogLevel level) { log_level = level; }
+void logging::SetLevel(const Level level) { log_level = level; }
 
-LogLevel logging::GetLevel() { return log_level; }
+logging::Level logging::GetLevel() { return log_level; }
+
+void logging::LogImpl(std::ostringstream &oss, const std::string &format, std::size_t pos) {
+    oss << format.substr(pos);
+}
+
+std::size_t logging::CountPlaceholders(const std::string &fmt) {
+    std::size_t count = 0;
+    for (std::size_t i = 0; i < fmt.size() - 1; ++i) {
+        if (fmt[i] == '{' && fmt[i + 1] == '}') {
+            count++;
+            i++;
+        }
+    }
+    return count;
+}

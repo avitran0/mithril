@@ -12,6 +12,7 @@ enum class LogLevel {
 
 namespace logging {
     void Log(LogLevel level, const std::string &message);
+    void SetLogFile(const std::string &file_name);
 
     void SetLevel(LogLevel level);
     LogLevel GetLevel();

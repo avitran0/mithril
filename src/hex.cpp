@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <mithril/hex.hpp>
 
 std::string hex::HexStringVector(std::vector<u8> vec) {

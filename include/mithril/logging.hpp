@@ -1,6 +1,5 @@
 #pragma once
 
-#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -20,7 +19,6 @@ namespace logging {
 }
 
 extern logging::Level log_level;
-extern std::ofstream log_file;
 
 namespace logging {
     std::string LevelName(Level level);
@@ -62,9 +60,6 @@ namespace logging {
         }
         const std::string formatted = "[Debug] " + Log(format, args...);
         std::cout << formatted;
-        if (log_file.good()) {
-            log_file << formatted;
-        }
     }
 
     template <typename... Args>
@@ -74,9 +69,6 @@ namespace logging {
         }
         const std::string formatted = "[Info] " + Log(format, args...);
         std::cout << formatted;
-        if (log_file.good()) {
-            log_file << formatted;
-        }
     }
 
     template <typename... Args>
@@ -86,9 +78,6 @@ namespace logging {
         }
         const std::string formatted = "[Warning] " + Log(format, args...);
         std::cout << COLOR_YELLOW << formatted << COLOR_RESET;
-        if (log_file.good()) {
-            log_file << formatted;
-        }
     }
 
     template <typename... Args>
@@ -98,12 +87,8 @@ namespace logging {
         }
         const std::string formatted = "[Error] " + Log(format, args...);
         std::cout << COLOR_RED << formatted << COLOR_RESET;
-        if (log_file.good()) {
-            log_file << formatted;
-        }
     }
 
-    void SetLogFile(const std::string &file_name);
     void SetLevel(Level level);
     Level GetLevel();
 }  // namespace logging

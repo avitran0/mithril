@@ -1,9 +1,6 @@
 #include "mithril/logging.hpp"
 
-#include <fstream>
-
 logging::Level log_level = logging::Level::Info;
-std::ofstream log_file {};
 
 std::string logging::LevelName(const Level level) {
     switch (level) {
@@ -19,13 +16,6 @@ std::string logging::LevelName(const Level level) {
             return "?";
     }
     return "?";
-}
-
-void logging::SetLogFile(const std::string &file_name) {
-    log_file = std::ofstream {file_name};
-    if (!log_file.good()) {
-        Error("could not open log file");
-    }
 }
 
 void logging::SetLevel(const Level level) { log_level = level; }

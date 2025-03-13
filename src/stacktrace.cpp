@@ -10,7 +10,9 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
+#include <fstream>
 #include <ios>
 #include <iostream>
 
@@ -51,6 +53,7 @@ void stacktrace::SignalHandler(const i32 signal) {
     std::exit(EXIT_FAILURE);
 }
 
+std::string addr2line(const std::string &program_name, void *address);
 std::vector<std::string> stacktrace::Stacktrace() {
     std::vector<void *> addresses(64 + skipped_frames);
     const i32 num_frames = backtrace(addresses.data(), 64 + skipped_frames);
@@ -64,6 +67,7 @@ std::vector<std::string> stacktrace::Stacktrace() {
 
     const std::string process_exe = std::filesystem::read_symlink("/proc/self/exe");
     std::vector<std::string> frames;
+    //logging::Info("{}", addr2line(process_exe, addresses[0]));
     for (void *address : addresses) {
         std::stringstream command;
         command << "addr2line -e " << process_exe << " -fpC 0x" << std::hex
@@ -92,4 +96,46 @@ std::vector<std::string> stacktrace::Stacktrace() {
         frames[i] = "#" + std::to_string(i) + " " + frames[i];
     }
     return frames;
+}
+
+// sections: .debug_info (most dies), .debug_abbrev, .debug_line, .debug_addr
+std::string addr2line(const std::string &program_name, void *address) {
+    // Open the ELF file in binary mode.
+    std::ifstream elf {program_name, std::ios::binary};
+    if (!elf.good()) {
+        logging::Error("error opening file {}", program_name);
+        return "";
+    }
+
+    // Read the ELF header.
+    Elf64_Ehdr ehdr;
+    elf.read(reinterpret_cast<char *>(&ehdr), sizeof(ehdr));
+    if (std::memcmp(ehdr.e_ident, ELFMAG, SELFMAG) != 0) {
+        logging::Error("not an elf file");
+        return "";
+    }
+
+    // Seek to the section header table.
+    elf.seekg(ehdr.e_shoff, std::ios::beg);
+    Elf64_Shdr *sh_table = new Elf64_Shdr[ehdr.e_shnum];
+    elf.read(reinterpret_cast<char *>(sh_table), ehdr.e_shnum * sizeof(Elf64_Shdr));
+
+    // Locate the section header string table.
+    Elf64_Shdr sh_str = sh_table[ehdr.e_shstrndx];
+    char *sh_strtab = new char[sh_str.sh_size];
+    elf.seekg(sh_str.sh_offset, std::ios::beg);
+    elf.read(sh_strtab, sh_str.sh_size);
+
+    // Iterate over the section headers and print section names.
+    for (int i = 0; i < ehdr.e_shnum; i++) {
+        const std::string sec_name = sh_strtab + sh_table[i].sh_name;
+        logging::Info("Section {}: {}", i, sec_name);
+    }
+
+    // Clean up.
+    delete[] sh_strtab;
+    delete[] sh_table;
+    elf.close();
+
+    return "";
 }

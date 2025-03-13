@@ -16,7 +16,7 @@ std::vector<Profile> profiles {64};
 void profile::Start(const std::string &name) {
     for (const auto &profile : profiles) {
         if (profile.name == name) {
-            logging::Error("profile with name " + name + " is already running");
+            logging::Error("profile with name {} is already running", name);
             return;
         }
     }
@@ -41,14 +41,14 @@ void profile::Stop(const std::string &name) {
 
             const u64 us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
             if (us < 1000) {
-                logging::Info(name + " took " + std::to_string(us) + " µs");
+                logging::Info("{} took {} µs", name, us);
             } else if (us < 1000000) {
                 const u64 ms =
                     std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
-                logging::Info(name + " took " + std::to_string(ms) + " ms");
+                logging::Info("{} took {} ms", name, ms);
             } else {
                 const u64 sec = std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
-                logging::Info(name + " took " + std::to_string(sec) + " sec");
+                logging::Info("{} took {} sec", name, sec);
             }
 
             profiles.erase(profiles.begin() + i);
@@ -57,5 +57,5 @@ void profile::Stop(const std::string &name) {
         }
     }
 
-    logging::Error("profile " + name + " not found");
+    logging::Error("profile {} not found", name);
 }

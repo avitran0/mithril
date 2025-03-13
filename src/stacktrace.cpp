@@ -42,9 +42,9 @@ std::string SignalName(const i32 signal) {
 }
 
 void stacktrace::SignalHandler(const i32 signal) {
-    logging::Info("received signal: " + SignalName(signal));
+    logging::Info("received signal: {}", SignalName(signal));
     const std::vector<std::string> frames = stacktrace::Stacktrace();
-    logging::Info("found " + std::to_string(frames.size()) + " stack frames");
+    logging::Info("found {} stack frames", frames.size());
     for (const std::string &frame : frames) {
         std::cout << frame + "\n";
     }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <csignal>
 #include <string>
 #include <vector>
 
@@ -11,4 +12,6 @@ namespace stacktrace {
     // prints a stack trace on receiving a signal
     void SignalHandler(i32 signal);
     std::vector<std::string> Stacktrace();
+
+    void SetupSignalHandlers(sig_t handler);
 }  // namespace stacktrace

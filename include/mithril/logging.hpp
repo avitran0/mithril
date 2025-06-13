@@ -58,7 +58,7 @@ namespace logging {
         if (log_level > Level::Debug) {
             return;
         }
-        const std::string formatted = "[Debug] " + Log(format, args...);
+        const std::string formatted = "[DEBUG] " + Log(format, args...);
         std::cout << formatted;
     }
 
@@ -67,7 +67,7 @@ namespace logging {
         if (log_level > Level::Info) {
             return;
         }
-        const std::string formatted = "[Info] " + Log(format, args...);
+        const std::string formatted = "[INFO] " + Log(format, args...);
         std::cout << formatted;
     }
 
@@ -76,7 +76,7 @@ namespace logging {
         if (log_level > Level::Warning) {
             return;
         }
-        const std::string formatted = "[Warning] " + Log(format, args...);
+        const std::string formatted = "[WARN] " + Log(format, args...);
         std::cout << COLOR_YELLOW << formatted << COLOR_RESET;
     }
 
@@ -85,7 +85,7 @@ namespace logging {
         if (log_level > Level::Error) {
             return;
         }
-        const std::string formatted = "[Error] " + Log(format, args...);
+        const std::string formatted = "[ERROR] " + Log(format, args...);
         std::cout << COLOR_RED << formatted << COLOR_RESET;
     }
 
